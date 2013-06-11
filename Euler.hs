@@ -8,6 +8,7 @@ module Euler
     ,reversei
     ,toDigits
     ,fromDigits
+ --   ,primeSieve
 )
 where
 
@@ -50,7 +51,20 @@ isPrime n | n <= 1 = False
                         in not (any 
                                    (\i -> (mod n i) == 0) 
                                    [2..truncate(root)])
-  
+                                   
+                                   
+-- primeSieve() - Sieve of Eratosthense
+{-
+primeSieve :: Int -> [Int]
+primeSieve n = let upper = truncate (sqrt (fromIntegral n))
+          in siever ([2] ++ [3,5..n]) upper
+          where siever set 1 = []
+                siever set 2 = set
+                siever set n | isPrime (head set) = siever (filterMultiples set n) (n - 1)
+                             | otherwise = filterMultiples set n
+                             where filterMultiples set n = [x | x <- set, x == n || (mod x n) /= 0]
+-}         
+     
                                                     
 -- factors()
 factors :: Int -> [Int]
