@@ -5,8 +5,13 @@ module Euler
     ,fibm
     ,isPrime
     ,factors
+    ,reversei
+    ,toDigits
+    ,fromDigits
 )
 where
+
+import Data.Bits
 
 
 -- divisible()
@@ -51,4 +56,22 @@ isPrime n | n <= 1 = False
 factors :: Int -> [Int]
 factors n = [x | x <- [2..s], (mod n x) == 0]
     where s = floor (sqrt (fromIntegral n))
+    
+    
+-- toDigits()
+toDigits :: Int -> [Int]
+toDigits 0 = []
+toDigits x = toDigits (div x 10) ++ [mod x 10]
+
+
+-- fromDigits()
+fromDigits = foldl addDigit 0
+                where addDigit num d = 10 * num + d
+
+
+-- reversei()
+reversei :: Int -> Int
+reversei n = fromDigits (reverse (toDigits n))
+
+                
                         
