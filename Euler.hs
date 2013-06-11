@@ -8,7 +8,8 @@ module Euler
     ,reversei
     ,toDigits
     ,fromDigits
- --   ,primeSieve
+    ,primeSieve
+    ,minusl
 )
 where
 
@@ -54,17 +55,21 @@ isPrime n | n <= 1 = False
                                    
                                    
 -- primeSieve() - Sieve of Eratosthense
-{-
-primeSieve :: Int -> [Int]
-primeSieve n = let upper = truncate (sqrt (fromIntegral n))
-          in siever ([2] ++ [3,5..n]) upper
-          where siever set 1 = []
-                siever set 2 = set
-                siever set n | isPrime (head set) = siever (filterMultiples set n) (n - 1)
-                             | otherwise = filterMultiples set n
-                             where filterMultiples set n = [x | x <- set, x == n || (mod x n) /= 0]
--}         
-     
+-- works but needs to go from 1 to root(n), not root(n) to 2
+primeSieveSlow :: Int -> [Int]
+primeSieveSlow n = let upper = truncate (sqrt (fromIntegral n))
+               in siever ([2] ++ [3,5..n]) upper
+               where siever set 1 = []
+                     siever set 2 = set
+                     siever set n | isPrime (head set) = siever (filterMultiples set n) (n - 1)
+                                  | otherwise = filterMultiples set n
+                                  where filterMultiples set n = filter (\x -> x == n || (mod x n) /= 0) set
+    
+
+primeSieve m = 2 : sieve [3,5..m]
+             where sieve [] = []
+                   sieve (p:xs) = p : sieve (minusl xs [p * p, p * p + 2 * p.. m])
+                   
                                                     
 -- factors()
 factors :: Int -> [Int]
@@ -86,6 +91,16 @@ fromDigits = foldl addDigit 0
 -- reversei()
 reversei :: Int -> Int
 reversei n = fromDigits (reverse (toDigits n))
+
+
+-- listSubtract
+minusl :: Ord a => [a] -> [a] -> [a]
+minusl [] _ = []
+minusl xs [] = xs
+minusl l1@(x:xs) l2@(y:ys)
+    | x > y = minusl l1 ys
+    | x < y = x : minusl xs l2
+    | otherwise = minusl xs l2
 
                 
                         
